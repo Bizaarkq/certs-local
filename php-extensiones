@@ -1,0 +1,5 @@
+FROM php:7.4.30-fpm-buster
+WORKDIR /app
+RUN apt-get update -y && apt-get -y install git zlib1g-dev libpng-dev libxml2-dev libzip-dev libcurl4-openssl-dev libonig-dev libbz2-dev curl nano
+RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip soap intl
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
