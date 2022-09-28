@@ -25,6 +25,8 @@ services:
       dockerfile: php-extensiones
     volumes:
       - ./site:/app
+    ports: 
+    - "9000:9000"
     depends_on:
       - db
   db:
@@ -32,9 +34,9 @@ services:
     volumes:
         - ./db:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_ROOT_PASSWORD: abcdef
       MYSQL_DATABASE: prestashop
       MYSQL_USER: user
-      MYSQL_PASSWORD: 12345
+      MYSQL_PASSWORD: abcdef
     ports:
       - "3306:3306"
