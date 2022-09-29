@@ -25,6 +25,7 @@ services:
       dockerfile: php-extensiones
     volumes:
       - ./site:/app
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
     ports: 
     - "9000:9000"
     depends_on:
