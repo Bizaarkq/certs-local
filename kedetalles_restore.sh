@@ -45,7 +45,7 @@ fi
 
 if [ "$SITE_RESTORE" = true ] ; then
     echo "Restaurando sitio"
-    rm -r $(pwd)/site/*
+    rm -r $(pwd)/site/
     tar -xpvf $(pwd)/backup/site/$(ls | awk -F- 'm<$3{m=$3;f=$0} END{print f}') -C $(pwd)
 fi
 
@@ -68,7 +68,7 @@ fi
 
 if [ ! -z $ESPECIFIC_DB_RESTORE ] && [ ! -z $DB_PASSWORD ] ; then
     echo "Restaurando base de datos especifica"
-    cat $ESPECIFIC_DB_RESTORE | docker exec -i kedetalles-db-1 /usr/bin/mysql -u root --password=abcdef prestashop
+    cat $ESPECIFIC_DB_RESTORE | docker exec -i kedetalles-db-1 /usr/bin/mysql -u root --password=$DB_PASSWORD prestashop
 fi
 
 if [ ! -z $ESPECIFIC_SSL_RESTORE ] ; then
