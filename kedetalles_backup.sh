@@ -3,9 +3,10 @@
 helpFunction()
 {
     echo ""
-    echo "Uso: $0 --backup-global --site-backup --db-backup --images-backup --ssl-backup"
+    echo "Uso: $0 --backup-global --site-backup --db-backup --db-password --images-backup --ssl-backup"
     echo $"\t-bg | --backup-global Realiza backup de todo el sistema"
     echo $"\t-sb | --site-backup Realizar backup del sitio"
+    echo $"\t-dbp | --db-password contraseña de la base de datos"
     echo $"\t-db | --db-backup Realizar backup de la base de datos"
     echo $"\t-ib | --images-backup Realizar backup de las imagenes"
     echo $"\t-ssl | --ssl-backup Realizar backup de los certificados"
@@ -18,6 +19,7 @@ while [ $# -gt 0 ] ; do
         -bg | --backup-global) BACKUP_GLOBAL=true ;;
         -sb | --site-backup) SITE_BACKUP=true ;;
         -db | --db-backup) DB_BACKUP=true ;;
+        -dbp | --db-password) DB_PASSWORD="$2" ;;
         -ib | --images-backup) CONTAINERS_BACKUP=true ;;
         -ssl | --ssl-backup) SSL_BACKUP=true ;;
         -h | --help) helpFunction ;; # Imprime helpFunction
@@ -45,11 +47,11 @@ if [ "$SITE_BACKUP" = true ] ; then
     tar -zcvpf $(pwd)/backup/site/site-kedetalles-$(date +%Y%m%d%H%M%S).tgz site/
 fi
 
-if [ "$DB_BACKUP" = true ] ; then
+if [ "$DB_BACKUP" = true ] && [ "$DB_PASSWORD" != "" ] ; then
     #respaldando base de datos
     echo $"\n\n###########   Respaldando base de datos  ############\n\n"
     mkdir -p $(pwd)/backup/db
-    docker exec kedetalles-db-1 /usr/bin/mysqldump -u user --password=02Hb@8M!lDja prestashop > $(pwd)/backup/db/db-kedetalles-$(date +%Y%m%d%H%M%S).sql
+    docker exec kedetalles-db-1 /usr/bin/mysqldump -u root --password=02Hb@8M!lDja prestashop > $(pwd)/backup/db/db-kedetalles-$(date +%Y%m%d%H%M%S).sql
 fi
 
 if [ "$CONTAINERS_BACKUP" = true ] ; then
