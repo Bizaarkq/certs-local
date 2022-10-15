@@ -3,11 +3,11 @@
 helpFunction()
 {
     echo ""
-    echo "Uso: $0 --backup-global --site-backup --db-backup --containers-backup --ssl-backup"
+    echo "Uso: $0 --backup-global --site-backup --db-backup --images-backup --ssl-backup"
     echo $"\t-bg | --backup-global Realiza backup de todo el sistema"
     echo $"\t-sb | --site-backup Realizar backup del sitio"
     echo $"\t-db | --db-backup Realizar backup de la base de datos"
-    echo $"\t-cb | --containers-backup Realizar backup de los contenedores"
+    echo $"\t-ib | --images-backup Realizar backup de las imagenes"
     echo $"\t-ssl | --ssl-backup Realizar backup de los certificados"
     echo $"\t-h | --help muestra la ayuda"
     exit 1 # Salida del script luego de mostrar el uso
@@ -18,7 +18,7 @@ while [ $# -gt 0 ] ; do
         -bg | --backup-global) BACKUP_GLOBAL=true ;;
         -sb | --site-backup) SITE_BACKUP=true ;;
         -db | --db-backup) DB_BACKUP=true ;;
-        -cb | --containers-backup) CONTAINERS_BACKUP=true ;;
+        -ib | --images-backup) CONTAINERS_BACKUP=true ;;
         -ssl | --ssl-backup) SSL_BACKUP=true ;;
         -h | --help) helpFunction ;; # Imprime helpFunction
         ? ) helpFunction ;; # Imprime helpFunction en caso de que un parametro no exista
@@ -27,7 +27,7 @@ while [ $# -gt 0 ] ; do
 done
 
 if [ -z $BACKUP_GLOBAL ] && [ -z $SITE_BACKUP ] && [ -z $DB_BACKUP ] && [ -z $CONTAINERS_BACKUP ] && [ -z $SSL_BACKUP ] ; then
-    echo "No se ha seleccionado ningun backup"
+    echo "No se ha seleccionado ninguna opcion de backup"
     helpFunction
 fi
 
@@ -55,10 +55,10 @@ fi
 if [ "$CONTAINERS_BACKUP" = true ] ; then
     #respaldando contenedores
     echo $"\n\n###########   Respaldando contenedores  ############\n\n"
-    mkdir -p $(pwd)/backup/containers/app $(pwd)/backup/containers/db $(pwd)/backup/containers/nginx
-    docker export kedetalles-app-1 > $(pwd)/backup/containers/app/app-bk-$(date +%Y%m%d%H%M%S).tar
-    docker export kedetalles-db-1 > $(pwd)/backup/containers/db/db-bk-$(date +%Y%m%d%H%M%S).tar
-    docker export kedetalles-nginx-1 > $(pwd)/backup/containers/nginx/nginx-bk-$(date +%Y%m%d%H%M%S).tar
+    mkdir -p $(pwd)/backup/images
+    docker save kedetalles-app:latest > $(pwd)/backup/images/kedetalles-app-$(date +%Y%m%d%H%M%S).tar
+    docker save mysql:5.7 > $(pwd)/backup/images/mysql-$(date +%Y%m%d%H%M%S).tar
+    docker save nginx:stable > $(pwd)/backup/images/nginx-$(date +%Y%m%d%H%M%S).tar
 fi
 
 if [ "$SSL_BACKUP" = true ] ; then
