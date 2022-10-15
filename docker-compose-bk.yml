@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  web:
+    image: nginx:stable
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./site:/app
+      - ./conf:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+      - ./snippets:/etc/nginx/snippets
+    command:
+      - /bin/sh
+      - -c
+      - |
+        nginx -g 'daemon off;'
+        systemctl restart nginx.service
+    depends_on:
+      - app
+  app:
+    image: kedetalles-app:latest
+    volumes:
+      - ./site:/app
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+    ports: 
+    - "9000:9000"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    volumes:
+        - ./db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abcdef
+      MYSQL_DATABASE: prestashop
+      MYSQL_USER: user
+      MYSQL_PASSWORD: abcdef
+    ports:
+      - "3306:3306"
