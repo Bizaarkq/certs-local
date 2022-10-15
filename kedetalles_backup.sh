@@ -70,3 +70,4 @@ if [ "$SSL_BACKUP" = true ] ; then
     tar -zcvpf $(pwd)/backup/ssl/ssl-kedetalles-$(date +%Y%m%d%H%M%S).tgz ssl/
 fi
 
+exit 0
